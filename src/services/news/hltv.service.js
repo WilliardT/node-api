@@ -2,6 +2,7 @@ const BaseScraper = require('../scraper/base-scraper');
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 
+
 class HltvScraper extends BaseScraper {
   constructor() {
     super();
@@ -34,6 +35,7 @@ class HltvScraper extends BaseScraper {
 
           if (!relativeUrl) {
             console.warn('No URL found for article:', title);
+            
             return; // Skip this article if no URL
           }
 
@@ -44,20 +46,26 @@ class HltvScraper extends BaseScraper {
             url,
             source: this.name
           });
+        
         } catch (error) {
           console.error('Error processing article:', error);
         }
       });
 
       console.log(`Found ${articles.length} articles from ${this.name}`);
+      
       return articles;
+    
     } catch (error) {
       console.error(`Error in HltvScraper: ${error.message}`);
       console.error(error.stack);
+      
       return []; // Return empty array on error
+    
     } finally {
       try {
         await browser.close();
+      
       } catch (error) {
         console.error('Error closing browser:', error);
       }

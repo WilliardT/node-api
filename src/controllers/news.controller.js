@@ -10,6 +10,7 @@ class NewsController {
       const allNews = await Promise.all(
         this.scrapers.map(scraper => scraper.getNews())
       );
+      
       res.json(allNews.flat());
 
     } catch (error) {
