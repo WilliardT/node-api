@@ -3,7 +3,10 @@ const CybersportScraper = require('../services/news/cybersport.service');
 
 class NewsController {
   constructor() {
-    this.scrapers = [new HltvScraper(), new CybersportScraper()];
+    this.scrapers = [
+      new HltvScraper(), 
+      new CybersportScraper()
+    ];
 
     // мап для быстрого поиска по имени
     this.scraperMap = {};
@@ -19,6 +22,7 @@ class NewsController {
       );
 
       res.json(allNews.flat());
+    
     } catch (error) {
       console.error('Error in getNews:', error);
       res.status(500).json({ error: error.message });
@@ -44,12 +48,31 @@ class NewsController {
       const news = await scraper.getNews();
 
       res.json(news);
-      
+    
     } catch (error) {
       console.error(
         `Error in getNewsBySource for ${req.params.source}:`,
         error
       );
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  // метод для получения списка доступных источников
+  getAvailableSources(req, res) {
+    try {
+      const sources = this.scrapers.map((scraper) => ({
+        name: scraper.name,
+        url: scraper.url,
+      }));
+
+      res.json({
+        sources,
+        total: sources.length,
+      });
+    
+    } catch (error) {
+      console.error('Error in getAvailableSources:', error);
       res.status(500).json({ error: error.message });
     }
   }
